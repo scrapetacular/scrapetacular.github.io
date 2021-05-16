@@ -1216,7 +1216,7 @@
             mode: 'cors',
             cache: 'default'
         };
-        const api_domain1 = "http://scrapetacular-ipv6.ydns.eu:7177"
+        const api_domain1 = "https://scrapetacular.herokuapp.com"
         fetch(api_domain1 + '/', myInit)
             .then(response => response.json())
             .then(data => on_success(data))
@@ -1232,7 +1232,7 @@
         console.log(body);
         $('div.from').text(JSON.stringify(body));
 
-        const api_domain1 = "http://scrapetacular-ipv6.ydns.eu:7177"
+        const api_domain1 = "https://scrapetacular.herokuapp.com"
 
         const myInit = {
             method: 'POST',

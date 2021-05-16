@@ -1,4 +1,4 @@
-const api_domain = "http://scrapetacular-ipv6.ydns.eu:7177"
+const api_domain = "https://scrapetacular.herokuapp.com"
 
 function get_values(query) {
     return $(query).map(function (idx, elem) {

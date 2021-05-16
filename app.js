@@ -28,7 +28,7 @@ $(window).on('load', function () {
         cache: 'default'
     };
 
-    const api_domain = "http://scrapetacular-ipv6.ydns.eu:7177"
+    const api_domain = "https://scrapetacular.herokuapp.com"
 
     
     
