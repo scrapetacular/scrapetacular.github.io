@@ -411,6 +411,27 @@ function get_current_url_list() {
 }
 
 $(window).on('load', function () {
+	const cors_get_request = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'omit',
+        mode: 'cors',
+        cache: 'default'
+    };
+
+   	fetch(api_domain + "/alive", cors_get_request)
+   	.then((response) => {
+   		console.log("API working: " + api_domain);
+   		return response;
+   	})
+   	.catch((error) => {
+   		console.log("API failing: " + api_domain);
+   		alert("Scraping server down, please email if you need access")
+   	})
+
+   	
     $(".url-input-section input")[0].focus();
     
     $(".url-next-button").click(function () {
