@@ -7,6 +7,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍉</text></svg>">
     <link rel="stylesheet" href="bulma.min.css">
     <link href="all.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" type="text/css" href="/css/hulga.min.css"> -->
     <title>SCRAPEtacular (Beta) | web scraping and data extraction to CSV and XLS format</title>
     <style>
         .input-level {
@@ -22,8 +23,58 @@
 </head>
 
 <script type="text/javascript" src="jquery-3.5.1.min.js"></script>
+<script type="text/javascript">
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    
+    const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+    
+    if ($navbarBurgers.length > 0) {
+      
+      $navbarBurgers.forEach(el => {
+        el.addEventListener('click', () => {
+          
+          const target = el.dataset.target;
+          const $target = document.getElementById(target);
+          
+          el.classList.toggle('is-active');
+          $target.classList.toggle('is-active');
+        });
+      });
+    }
+  });
+</script>
 
 <body class="has-background-light">
+  <div id="main"><section class="hero is-primary has-background-primary-dark shadow-hero ">
+  <div class="hero-head">
+        <nav class="navbar is-primary">
+        <div class="container">
+        
+	    <div class="navbar-brand">
+	      <a class="navbar-item fake-text" href="https://scrapetacular.github.io">
+	        SCRAPEtacular
+	      </a>
+	      <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
+	        <span aria-hidden="true"></span>
+	        <span aria-hidden="true"></span>
+	        <span aria-hidden="true"></span>
+	      </a>
+	    </div>
+	        
+	    <div class="navbar-menu" id="navMenu">
+	      <div class="navbar-end">
+	        
+	        <a class="navbar-item" href="/" title="index">Home</a>
+	        
+	        <a class="navbar-item" href="/post/" title="blog">Blog</a>
+	        
+	      </div>
+	    </div>
+	    </div>
+	    </nav>
+	</div>
+	</div>
     <section class="section has-background-primary-dark big_title_header">
         <div class="container has-text-primary-light">
             <h1 class="title has-text-primary-light">SCRAPEtacular (Beta)</h1>
