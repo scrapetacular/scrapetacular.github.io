@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Fr1st Ps0t on SCRAPEtacular</title>
+    <link>https://scrapetacular.github.io/categories/fr1st-ps0t/</link>
+    <description>Recent content in Fr1st Ps0t on SCRAPEtacular</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 01 Jun 2021 19:11:19 +0100</lastBuildDate><atom:link href="https://scrapetacular.github.io/categories/fr1st-ps0t/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>First Post</title>
+      <link>https://scrapetacular.github.io/post/first-post/</link>
+      <pubDate>Tue, 01 Jun 2021 19:11:19 +0100</pubDate>
+      
+      <guid>https://scrapetacular.github.io/post/first-post/</guid>
+      <description>Thought I&amp;rsquo;d do a bit of thought leadership and whatnot for SEO and inbound linkjuice purposes, hurry up and index my site pls Googlers.
+I&amp;rsquo;ll mainly be writing about things related to data extraction and analysis, but occasionally some general programming topics.
+The first thing I want to do is a comparison of the free tiers of all scraping services, such as ScrapingAnt, ScrapingBee etc. Things like response times for plain or js rendered sites, default countries (if not settable), and the headers sent by their client.</description>
+    </item>
+    
+  </channel>
+</rss>
