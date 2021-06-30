@@ -3,17 +3,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png"><title>First Post | SCRAPEtacular</title>
-  <meta property="og:title" content="First Post - SCRAPEtacular">
+  <meta name="msapplication-TileImage" content="/ms-icon-144x144.png"><title>Web Scraping Considered Harmful | SCRAPEtacular</title>
+  <meta property="og:title" content="Web Scraping Considered Harmful - SCRAPEtacular">
   <meta property="og:type" content="article">
   
-  <meta property="article:published_time" content="2021-06-01T19:11:19&#43;08:00">
+  <meta property="article:published_time" content="2021-06-08T21:47:27&#43;08:00">
   
   
-  <meta property="article:modified_time" content="2021-06-01T19:11:19&#43;08:00">
+  <meta property="article:modified_time" content="2021-06-08T21:47:27&#43;08:00">
   
   <meta name="keywords" content="Data, More Data">
-  <meta name="description" content="First Post"><meta name="author" content="Femik">
+  <meta name="description" content="Web Scraping Considered Harmful"><meta name="author" content="Femik">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
@@ -59,40 +59,14 @@
   <div class="hero-body">
     <header class="container has-text-centered">
       <h1 class="title post-title">
-        First Post
+        Web Scraping Considered Harmful
       </h1>
-      <h2 class="subtitle"><time class="post-meta">2021/06/01</time> ・
-          
-            <span class="post-tag post-meta">
-              <a href="https://scrapetacular.github.io/categories/thought-leadership">Thought Leadership</a>
-            </span>
-          
-            <span class="post-tag post-meta">
-              <a href="https://scrapetacular.github.io/categories/seo">SEO</a>
-            </span>
-          
-            <span class="post-tag post-meta">
-              <a href="https://scrapetacular.github.io/categories/fr1st-ps0t">Fr1st Ps0t</a>
-            </span>
-          
-        </h2>
+      <h2 class="subtitle"><time class="post-meta">2021/06/08</time></h2>
       
       <div class="tagbox post-meta">
         
         <span class="post-tag">
-          <a href="https://scrapetacular.github.io/tags/data-analysis">#Data Analysis</a>
-        </span>
-        
-        <span class="post-tag">
           <a href="https://scrapetacular.github.io/tags/scraping">#Scraping</a>
-        </span>
-        
-        <span class="post-tag">
-          <a href="https://scrapetacular.github.io/tags/spruiking">#Spruiking</a>
-        </span>
-        
-        <span class="post-tag">
-          <a href="https://scrapetacular.github.io/tags/tldr">#TLDR</a>
         </span>
         
       </div>
@@ -106,11 +80,40 @@
       
       <div class="column is-three-fifths is-offset-one-fifth">
       
-        <article class="content" id="post-content"><p>Thought I&rsquo;d do a bit of thought leadership and whatnot for SEO and inbound linkjuice purposes, hurry up and index my site pls Googlers.</p>
-<p>I&rsquo;ll mainly be writing about things related to data extraction and analysis, but occasionally some general programming topics.</p>
-<p>The first thing I want to do is a comparison of the free tiers of all scraping services, such as ScrapingAnt, ScrapingBee etc. Things like response times for plain or js rendered sites, default countries (if not settable), and the headers sent by their client.</p>
-<p>Another thing I&rsquo;d like to do is a comparison of the &ldquo;no code&rdquo; data extraction algorithms, and possibly some reverse engineering to see how they all work, and which situations they break down for. In the process of building my own algorithm, I&rsquo;ve developed a few tricky test pages with the kind of patterns I&rsquo;d like my algorithm to handle cleanly, so I&rsquo;d like to test the competition too.</p>
-<p>This post needs a few gifs tbh, wall of text, TLDR</p>
+        <article class="content" id="post-content"><p>I&rsquo;ve always wanted to write one of these, but is it true? Let&rsquo;s look at the evidence</p>
+<h1 id="are-you-ddosing-someone-elses-server">Are you DDOSing someone elses server?</h1>
+<p>A poorly written web page spider may overwhelm the bandwidth of a small server, preventing other users from accessing it. In some cases a sudden increase in bandwidth will put the host over some arbitrary limit costing them money.</p>
+<p>Good scraping etiquette dictates that you should at least respect any spidering intervals specified in the robots.txt, or something sensible like every 10 seconds if you want to prevent harm.</p>
+<p>Spidering during off peak hours is also a good idea.</p>
+<p>Is there an archive or data clearinghouse that you can use instead of scraping?</p>
+<h1 id="what-are-you-doing-with-the-data">What are you doing with the data</h1>
+<p>IANAL, so I can&rsquo;t comment on the legal implications of scraping in your jurisdiction, but some uses seem more legitimate than others.</p>
+<p>How would you rank these uses of scraped data in terms of legitimacy?</p>
+<ul>
+<li>Research on competitors pricing strategies to be used internally.</li>
+<li>Research on industry pricing strategies to be sold for profit.</li>
+<li>Research on industry pricing strategies to be published academically.</li>
+<li>Aggregating industry prices and descriptions on your ad supported website.</li>
+</ul>
+<h1 id="how-does-it-affect-the-web">How does it affect the web?</h1>
+<p>I would guess that &hellip; a lot of traffic on the modern internet is bots, spiders and various kinds of browser automation.</p>
+<p>The tools for spoofing the usage patterns of a normal human user get more powerful, traffic can be tunneled through high quality residential proxies that can also solve captchas faster than a human</p>
+<p>The arms race between bots and hosts is making things increasingly difficult for human users, and the irony is not lost on me when I fail a captcha manually, that I can buy automated captcha solutions by the million.</p>
+<p>In addition, I have no idea how this affects things like clickthough rates on ad supported websites, views on youtube and soundcloud, endorsements on LinkedIn, followers on twitter etc., can any of these stats be believed?</p>
+<h1 id="are-you-wasting-energy">Are you wasting energy?</h1>
+<p>This might end up as a separate blog post with benchmarks, but how efficient is your webscraper in terms of processor cycles, speed and energy consumed?</p>
+<p>There are three typical ways of extracting data from a web page :-</p>
+<ul>
+<li>Downloading the html with something like python requests, processing with BeautifulSoup or the equivalent in your language of choice.</li>
+<li>Digging into the page requests with the browser developer tools, and looking for a convenient JSON API that can be downloaded with cURL or Python.</li>
+<li>Using one of the browser automation tools like chrome webdriver or selenium to render a page with js, AJAX and CSS, and scrolling if the page is an infinite scroller.</li>
+</ul>
+<p>Browser automation should probably be your last resort for large jobs (especially if you rely on a service that charges extra for this), but there may be some advantages in development time.</p>
+<p>There can be a lot of options in methods, tools, html parsers, languages in the non-browser automation solutions, which can lead to large differences in the processing time. My current solutions, found during the development of Scrapetacular, have given me a 500% speed increase over my initial naive solutions.</p>
+<h1 id="verdict">Verdict</h1>
+<p>Harmful. Yes, yes I know I&rsquo;m literally working on tools for expanding access to webscraping.
+Although adhering to best practices can minimise the effects of your web scraping project, human users are still caught in the cross-fire of the arms race between bots and hosts in the form of ever more irritating captchas, and this can&rsquo;t really be avoided.</p>
+<p>We do still have a responsibilty to minimise the impact however. If you&rsquo;re interested in how I build scalable scraping projects today, feel free to get in contact.</p>
 </article>
       </div>
       
