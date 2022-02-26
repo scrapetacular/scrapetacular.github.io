@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍉</text></svg>">
+    <link rel="stylesheet" href="bulma.min.css">
+    <link href="all.css" rel="stylesheet">
+    <title>SCRAPEtacular (Beta) | web scraping and data extraction to CSV and XLS format</title>
+    <style>
+        .input-level {
+            overflow: scroll;
+        }
+        .preview-button-section {
+            display: none;
+        }
+        .second_url-input-section {
+            display: none;
+        }
+        .second_url-completed-section {
+            display: none;
+        }
+        .url-completed-section {
+            display: none;
+        }
+        .headings-input-section {
+            display: none;
+        }
+        .headings-completed-section{
+            display: none;
+        }
+        .first_row-input-section{
+            display: none;
+        }
+        .first_row-input-section textarea {
+/*            border: 1px solid;*/
+            border-radius: 10px 10px 2px 10px !important;
+/*            border-color: aqua;*/
+        }
+        .first_row-completed-section{
+            display: none;
+        }
+        .second_row-input-section{
+            display: none;
+        }
+        .second_row-completed-section{
+            display: none;
+        }
+        .third_row-input-section{
+            display: none;
+        }
+        .third_row-completed-section{
+            display: none;
+        }
+        .second_page_first_row-completed-section{
+            display: none;
+        }
+        .first_row-preview-section {
+            display: none;
+        }
+        .second_row-preview-section {
+            display: none;
+        }
+        .third_row-preview-section {
+            display: none;
+        }
+        .data_preview-table-container {
+            max-height: 15em;
+            overflow-y: scroll;
+        }
+        .url_list-input-section textarea {
+            resize: none;
+        }
+        .double_row-preview-section {
+            display: none;
+        }
+        .second_page_first_row-input-section {
+            display: none;
+        }
+        .second_page_first_row-preview-section {
+            display: none;
+        }
+        .second_page-preview-section {
+            display: none;
+        }
+        .url_list-input-section {
+            display: none;
+        }
+        .uwotm9 {
+            display: none;
+        }
+        .container {
+            max-width: 1000px !important;
+        }
+        body {
+            min-height: 100vh;
+        }
+    </style>
+</head>
+
+<script type="text/javascript" src="jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="state-machine.min.js"></script>
+<script type="text/javascript" src="jquery.serializejson.js"></script>
+<script type="text/javascript" src="jquery.textcomplete.min.js"></script>
+<script type="text/javascript" src="one_page.js"></script>
+
+<body class="has-background-light">
+    <form class="main_form">
+    <input class="empty_url_list" type="hidden" value="">
+    <a href='/'>
+    <section class="section has-background-primary-dark big_title_header">
+        <div class="container has-text-primary-light">
+            <h1 class="title has-text-primary-light">SCRAPEtacular (Beta)</h1>
+            <h2 class="subtitle is-4 has-text-primary-light">
+                A <strong class="has-text-primary-light">simple</strong> way of performing web scraping and data extraction to CSV and XLS format.
+            </h2>
+        </div>
+    </section>
+    </a>
+    
+    <section class="section url-input-section">
+        <div class="container">
+            <br>
+            <br>
+            <br>
+            <br>
+            <div class="field">
+                <label class="label">Please enter the URL of the page you would like to scrape</label>
+                <div class="control">
+                    <input class="input is-success" type="url" name="primary_url" placeholder="e.g. http://example.com/page1">
+                </div>
+            </div>
+        </div>
+        
+        <br>
+        
+        <div class="container">
+            <div class="buttons are-large">
+                <button type="button" class="button is-primary url-next-button">Next</button>
+            </div>
+        </div>
+        
+    </section>
+    
+    <section class="section url-completed-section">
+        <div class=container>
+            <h1 class="label is-medium">
+                URL
+            </h1>
+            <h2 class="subtitle">
+                http://example.com/page1
+            </h2>
+            <hr class="has-background-grey-lighter">
+        </div>
+    </section>
+    
+    <section class="section headings-input-section">
+        <div class="container">
+            <h1 class="title">
+                Add headings for the columns of data that you would like to extract (up to 4)
+            </h1>
+        </div>
+        
+        <br>
+        
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Heading 1</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Product Name">
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Heading 2</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Price">
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Heading 3</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Age">
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Heading 4</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="Username">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <br>
+        
+        <div class="container">
+            <div class="buttons are-large">
+                <button type="button" class="button is-primary headings-next-button">Next</button>
+                <button type="button" class="button is-primary is-light is-outlined headings-back-button">Back</button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section headings-completed-section">
+        <div class="container">
+            <h1 class="label is-medium">
+                Column headings
+            </h1>
+            
+            <div class="columns">
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                </div>
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                </div>
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                </div>
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                </div>
+            </div>
+            
+            <hr class="has-background-grey-lighter">
+        </div>
+    </section>
+    
+    <section class="section first_row-input-section">
+        <div class="container">
+            <h1 class="title">
+                Add the first row of data according to your headings
+            </h1>
+            <h2 class="subtitle">
+                This will allow our magic algorithms to learn the structure of the page
+            </h2>
+        </div>
+        
+        <br>
+        
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Product Name</label>
+                        <div class="control">
+                            <textarea class="textarea is-small" placeholder="Small textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Product Name</label>
+                        <div class="control">
+                            <textarea class="textarea is-small" placeholder="Small textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Product Name</label>
+                        <div class="control">
+                            <textarea class="textarea is-small" placeholder="Small textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Product Name</label>
+                        <div class="control">
+                            <textarea class="textarea is-small" placeholder="Small textarea"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <br>
+        
+        <div class="container">
+            <div class="buttons are-large">
+                <button type="button" class="button is-primary first_row-next-button">Next</button>
+                <button type="button" class="button is-primary is-light is-outlined first_row-back-button">Back</button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section first_row-completed-section">
+        <div class="container">
+            <h1 class="title">
+                First Row of Data
+            </h1>
+            
+            <div class="columns">
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                    <code>Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor consequat libero.</code>
+                </div>
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                    <code>Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor consequat libero.</code>
+                </div>
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                    <code>Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor consequat libero.</code>
+                </div>
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                    <code>Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor consequat libero.</code>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+    
+    <section class="section double_row-preview-section">
+        <div class="container">
+            <h1 class="title">
+                Data Preview
+            </h1>
+        </div>
+        
+        <br>
+        
+        <div class="container data_preview-table-container">
+        </div>
+        
+        <br>
+        
+        <div class="container">
+            <h1 class="title">
+                Is the second row predicted correctly in the data preview?
+            </h1>
+            <div class="buttons are-large">
+                <button type="button" class="button is-success double_row-looks_good-button">Yes</button>
+                <button type="button" class="button is-danger double_row-missing_data-button">No</button>
+                <button type="button" class="button is-primary is-light is-outlined double_row-preview-back-button">Back</button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section second_row-completed-section">
+        <div class="container">
+            <h1 class="title">
+                First Missing Row of Data
+            </h1>
+            
+            <div class="columns">
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                    <code>Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor consequat libero.</code>
+                </div>
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                    <code>Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor consequat libero.</code>
+                </div>
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                    <code>Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor consequat libero.</code>
+                </div>
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                    <code>Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor consequat libero.</code>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+    
+    <section class="section third_row-completed-section">
+        <div class="container">
+            <h1 class="title">
+                First Row of Data
+            </h1>
+            
+            <div class="columns">
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                    <code>Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor consequat libero.</code>
+                </div>
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                    <code>Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor consequat libero.</code>
+                </div>
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                    <code>Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor consequat libero.</code>
+                </div>
+                <div class="column">
+                    <h2 class="subtitle">
+                        Product Name
+                    </h2>
+                    <code>Integer sollicitudin, tortor a mattis commodo, velit urna rhoncus erat, vitae congue lectus dolor consequat libero.</code>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+    
+    <section class="section first_row-preview-section">
+        <div class="container">
+            <h1 class="title">
+                Data Preview
+            </h1>
+        </div>
+        
+        <br>
+        
+        <div class="container data_preview-table-container">
+            <table class="table is-narrow is-hoverable is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Username</th>
+                    </tr>
+                </thead>
+                <tbody class="has-text-grey">
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                </tbody>
+                
+            </table>
+        </div>
+        
+        <br>
+        
+        <div class="container">
+            <div class="buttons are-large">
+                <button type="button" class="button is-success first_row-looks_good-button">Download as CSV</button>
+                <button type="button" class="button is-danger first_row-missing_data-button">Preview has missing data</button>
+                <button type="button" class="button is-primary is-light is-outlined first_row-preview-back-button">Back</button>
+            </div>
+            <hr class="has-background-grey-lighter">
+        </div>
+    </section>
+    
+    <section class="section third_row-preview-section">
+        <div class="container">
+            <h1 class="title">
+                Data Preview
+            </h1>
+        </div>
+        
+        <br>
+        
+        <div class="container data_preview-table-container">
+            <table class="table is-narrow is-hoverable is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Username</th>
+                    </tr>
+                </thead>
+                <tbody class="has-text-grey">
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                </tbody>
+                
+            </table>
+        </div>
+        
+        <br>
+        
+        <div class="container">
+            <div class="buttons are-large">
+                <button type="button" class="button is-success third_row-looks_good-button">Download as CSV</button>
+                <button type="button" class="button is-danger third_row-missing_data-button">Preview has missing data</button>
+                <button type="button" class="button is-primary is-light is-outlined third_row-preview-back-button">Back</button>
+            </div>
+            <hr class="has-background-grey-lighter">
+        </div>
+    </section>
+    
+    <section class="section second_row-preview-section">
+        <div class="container">
+            <h1 class="title">
+                Data Preview
+            </h1>
+        </div>
+        
+        <br>
+        
+        <div class="container data_preview-table-container">
+            <table class="table is-narrow is-hoverable is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Username</th>
+                    </tr>
+                </thead>
+                <tbody class="has-text-grey">
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                </tbody>
+                
+            </table>
+        </div>
+        
+        <br>
+        
+        <div class="container">
+            <div class="buttons are-large">
+                <button type="button" class="button is-success second_row-looks_good-button">Download as CSV</button>
+                <button type="button" class="button is-danger second_row-missing_data-button">Preview has missing data</button>
+                <button type="button" class="button is-primary is-light is-outlined second_row-preview-back-button">Back</button>
+            </div>
+            <hr class="has-background-grey-lighter">
+        </div>
+    </section>
+    
+    <section class="section second_row-input-section">
+        
+        <div class="container">
+            <h1 class="title">
+                Add the correct second row of data according to the headings
+            </h1>
+        </div>
+        
+        <br>
+        
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Product Name</label>
+                        <div class="control">
+                            <textarea class="textarea is-small" placeholder="Small textarea"></textarea>
+                        </div>
+                        <p class="help is-success">This username is available</p>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Product Name</label>
+                        <div class="control">
+                            <textarea class="textarea is-small" placeholder="Small textarea"></textarea>
+                        </div>
+                        <p class="help is-success">This username is available</p>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Product Name</label>
+                        <div class="control">
+                            <textarea class="textarea is-small" placeholder="Small textarea"></textarea>
+                        </div>
+                        <p class="help is-success">This username is available</p>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Product Name</label>
+                        <div class="control">
+                            <textarea class="textarea is-small" placeholder="Small textarea"></textarea>
+                        </div>
+                        <p class="help is-success">This username is available</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <br>
+        
+        <div class="container">
+            <div class="buttons are-large">
+                <button type="button" class="button is-primary second_row-next-button">Next</button>
+                <button type="button" class="button is-primary is-light is-outlined second_row-back-button">Back</button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="section third_row-input-section">
+        <div class="container">
+            <h1 class="title">
+                Data Preview
+            </h1>
+        </div>
+        
+        <br>
+        
+        <div class="container data_preview-table-container">
+            <table class="table is-narrow is-hoverable is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Username</th>
+                    </tr>
+                </thead>
+                <tbody class="has-text-grey">
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                    <tr>
+                        <th class="has-text-grey is-unselectable">widget</th>
+                        <th class="has-text-grey is-unselectable">12.99</th>
+                        <th class="has-text-grey is-unselectable">theregista</th>
+                    </tr>
+                </tbody>
+                
+            </table>
+        </div>
+        
+        <br>
+        
+        <div class="container">
+            <h1 class="title">
+                Add the next missing row of data according to the headings
+            </h1>
+        </div>
+        
+        <br>
+        
+        <div class="container">
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Product Name</label>
+                        <div class="control">
+                            <textarea class="textarea is-small" placeholder="Small textarea"></textarea>
+                        </div>
+                        <p class="help is-success">This username is available</p>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Product Name</label>
+                        <div class="control">
+                            <textarea class="textarea is-small" placeholder="Small textarea"></textarea>
+                        </div>
+                        <p class="help is-success">This username is available</p>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Product Name</label>
+                        <div class="control">
+                            <textarea class="textarea is-small" placeholder="Small textarea"></textarea>
+                        </div>
+                        <p class="help is-success">This username is available</p>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Product Name</label>
+                        <div class="control">
+                            <textarea class="textarea is-small" placeholder="Small textarea"></textarea>
+                        </div>
+                        <p class="help is-success">This username is available</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <br>
+        
+        <div class="container">
+            <div class="buttons are-large">
+                <button type="button" class="button is-primary third_row-next-button">Next</button>
+                <button type="button" class="button is-primary is-light is-outlined third_row-back-button">Back</button>
+            </div>
+        </div>
+    </section>
+
+    
+    <section class="section url_list-input-section">
+        <div class="container">
+            <div class="field">
+                <label class="label">Please enter the list of URLs you would like to scrape, one on each line, maximum of 10</label>
+                <div class="control">
+                    <textarea class="textarea is-success" rows=10 type="url" placeholder="https://example.com/page1&#13;https://example.com/page2&#13;https://example.com/page3&#13;https://example.com/page4&#13;https://example.com/page5&#13;https://example.com/page6&#13;https://example.com/page7&#13;https://example.com/page8&#13;https://example.com/page9&#13;https://example.com/page10"></textarea>
+                </div>
+                <p class="help is-success">If there is a pattern to your urls, you can add them automatically with the add 1 button</p>
+            </div>
+        </div>
+        
+        <br>
+        
+        <div class="container">
+            <div class="buttons are-small">
+                <button type="button" class="button is-primary is-light url_list-add1-button">Add 1</button>
+                <button type="button" class="button is-primary is-light url_list-add10-button">Add 10</button>
+            </div>
+        </div>
+
+        <br>
+        
+        <div class="container">
+            <div class="buttons are-large">
+                <button type="button" class="button is-primary url_list-next-button">Download CSV</button>
+            </div>
+        </div>
+        
+    </section>
+    
+    </form>
+    
+    <footer class="footer">
+    	<div class="container">
+	    	<div class="content has-text-centered">
+	    		<p>
+	    			<strong>SCRAPEtacular</strong> by Femik.
+	    		</p>
+	    		<p>
+	    			For feedback, requests, bug reporting and larger custom jobs etc.,
+	    		</p>
+	    		<p>
+	    			<img src="deets.png">
+	    		</p>
+	    	</div>
+    	</div>
+    </footer>
+
+</body>
+</html>
