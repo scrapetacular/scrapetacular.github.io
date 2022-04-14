@@ -1,5 +1,63 @@
 const api_domain = "https://scrapetacular.herokuapp.com"
 
+
+
+function submitPayloadTo(payload, endpoint, on_success, on_error, download = false) {
+
+    // const api_domain1 = "https://scrapetacular.herokuapp.com"
+    const api_domain1 = "https://scrapetacular.herokuapp.com"
+    if (download) {
+    	payload["Format"] = "csv"
+    }
+
+    const myInit = {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload),
+        credentials: 'omit',
+        mode: 'cors',
+        cache: 'default'
+    };
+    fetch(api_domain1 +  endpoint, myInit)
+    	.then(response => {
+    		if (!response.ok) {
+    			response.text().then(error_msg => {
+    				alert(error_msg);
+    				return
+    			});
+    			throw new Error("HTTP status :" + response.status);
+    			return
+    		}
+    		if (download) {
+    			return response.blob()
+    		}
+    		return response.json()
+    	})
+        .then(response => on_success(response))
+        .catch((error) => {
+            console.log("error");
+            on_error(error);
+        });
+}
+
+function build_table_structure(preview_data) {
+	var table_structure = [];
+	console.log(preview_data)
+	for (let i in preview_data) {
+		let col = preview_data[i]
+		for(const [index,value] of col["data"].entries()){
+		    if (!table_structure[index]) {
+		    	table_structure[index] = {}
+		    }
+		    table_structure[index][col["heading"]] = value
+		}
+	}
+	return table_structure
+}
+
 function get_values(query) {
     return $(query).map(function (idx, elem) {
         return $(elem).val();
@@ -124,7 +182,7 @@ function add_value_to_input(query, values, limit) {
     });
 }
 
-function build_table_structure(table_headings, table_rows) {
+function build_table_structure2(table_headings, table_rows) {
     var table_structure = [];
     console.log(table_headings);
     console.log(table_rows);
@@ -181,13 +239,15 @@ function build_table_row(row_data) {
     return tr
 }
 
-function handle_second_url_next_success(preview_data) {
+function handle_second_url_next_success(response) {
+	const preview_data = response["scrape"]
+	
     const raw_second_url_data = $(".second_url-input-section input").val();
     $(".second_url-input-section").fadeOut(200, function () {
         insert_text(".second_url-completed-section .subtitle", [raw_second_url_data]);
         $(".second_url-completed-section").fadeIn(200, function() {
             $(".second_page-preview-section .data_preview-table-container table").remove();
-            var table_structure = build_table_structure(headings, preview_data);
+            var table_structure = build_table_structure(preview_data);
             build_and_append_table(".second_page-preview-section .data_preview-table-container", table_structure);
             $(".second_url-next-button").removeClass("is-loading");
             $(".second_page-preview-section").fadeIn(200);
@@ -195,13 +255,14 @@ function handle_second_url_next_success(preview_data) {
     });
 }
 
-function handle_third_url_next_success(preview_data) {
+function handle_third_url_next_success(response) {
+	const preview_data = response["scrape"]
     const raw_third_url_data = $(".third_url-input-section input").val();
     $(".third_url-input-section").fadeOut(200, function () {
         insert_text(".third_url-completed-section .subtitle", [raw_third_url_data]);
         $(".third_url-completed-section").fadeIn(200, function() {
             $(".third_page-preview-section .data_preview-table-container table").remove();
-            var table_structure = build_table_structure(headings, preview_data);
+            var table_structure = build_table_structure(preview_data);
             build_and_append_table(".third_page-preview-section .data_preview-table-container", table_structure);
             $(".third_url-next-button").removeClass("is-loading");
             $(".third_page-preview-section").fadeIn(200);
@@ -275,9 +336,9 @@ function submitAutocomplete(term, callback) {
         mode: 'cors',
         cache: 'default'
     };
-    fetch(api_domain + '/autocomplete', myInit)
+    fetch(api_domain + '/v1/autocomplete', myInit)
         .then(response => response.json())
-        .then(data => callback(data))
+        .then(data => callback(data["autocomplete"]))
         .catch((error) => {
             callback([]);
         });
@@ -314,9 +375,9 @@ function submitAutocomplete2(term, callback) {
         mode: 'cors',
         cache: 'default'
     };
-    fetch(api_domain + '/autocomplete', myInit)
+    fetch(api_domain + '/v1/autocomplete', myInit)
         .then(response => response.json())
-        .then(data => callback(data))
+        .then(data => callback(data["autocomplete"]))
         .catch((error) => {
             callback([]);
         });
@@ -391,12 +452,14 @@ function submitURLCanGenerate(url_list, on_success, on_error) {
         });
 }
 
-function handle_urls_generated(new_url_list) {
+function handle_urls_generated(response) {
+	const new_url_list = response["urls"]
 	const new_text = $(".url_list-input-section textarea").val().trim() + "\n" + new_url_list.join("\n")
 	$(".url_list-input-section textarea").val(new_text)
 }
 
-function handle_urls_can_generate(bool_value) {
+function handle_urls_can_generate(response) {
+	const bool_value = response["can_fill"]
 	$(".url_list-add1-button").attr("disabled", !bool_value);
 	$(".url_list-add10-button").attr("disabled",!bool_value);
 }
@@ -405,6 +468,9 @@ function get_current_url_list() {
 	const raw_first_url_data = $(".url-input-section input").val();
 	const raw_second_url_data = $(".second_url-input-section input").val();
 	var url_list = [raw_first_url_data, raw_second_url_data]
+   	if ($(".url_list-input-section textarea").val().trim() == "") {
+   		return url_list
+   	}
 	var textarea_url_list = $(".url_list-input-section textarea").val().trim().split(/\r|\n/)
 	url_list = url_list.concat(textarea_url_list)
 	return url_list
@@ -421,7 +487,14 @@ $(window).on('load', function () {
         cache: 'default'
     };
 
-   	fetch(api_domain + "/alive", cors_get_request)
+    let payload = {
+    	"Format": "json",
+    	"PageQueries": [],
+    	"URLs": []
+    };
+
+
+   	fetch(api_domain + "/v1/alive", cors_get_request)
    	.then((response) => {
    		console.log("API working: " + api_domain);
    		return response;
@@ -437,6 +510,14 @@ $(window).on('load', function () {
     $(".url-next-button").click(function () {
         const raw_url = get_values(".url-input-section input");
         console.log(raw_url);
+        const prefetch_payload = {
+        	"URL": raw_url[0]
+        }
+        payload["URLs"] = []
+        payload["URLs"].push(raw_url[0])
+        payload["PageQueries"] = []
+        payload["PageQueries"].push({"URL": raw_url[0]})
+        
         $(".big_title_header .subtitle").slideUp(200);
         $(".big_title_header .title").slideUp(200);
         $(".url-input-section").fadeOut("fast", function() {
@@ -444,7 +525,8 @@ $(window).on('load', function () {
             $(".url-completed-section").fadeIn(300, function() {
                 $(".headings-input-section").fadeIn(1000);
                 $(".headings-input-section input")[0].focus()
-                submitAutocomplete("blank", console.log)
+                // submitAutocomplete("blank", console.log)
+                submitPayloadTo(prefetch_payload, "/v1/prefetch", console.log, console.log)
             });
         });
     });
@@ -468,6 +550,8 @@ $(window).on('load', function () {
     
     
     $(".headings-back-button").click(function () {
+    	payload["Headings"] = []
+    	
         $(".headings-input-section").fadeOut("fast", function() {
             $(".url-completed-section").fadeOut(200, function () {
                 insert_attrs_to(".first_row-input-section textarea", "disabled[]", 4);
@@ -481,6 +565,8 @@ $(window).on('load', function () {
     
     $(".headings-next-button").click(function () {
         set_headings();
+        payload["Headings"] = headings
+        
         if (headings.length != 0) {
             $(".headings-input-section").fadeOut("fast", function() {
                 insert_attrs_to(".headings-input-section input", "headings[]", headings.length);
@@ -510,6 +596,8 @@ $(window).on('load', function () {
     
     $(".first_row-next-button").click(function () {
         const raw_first_row_data = get_values(".first_row-input-section textarea");
+        payload["PageQueries"][0]["QueryRows"] =  [raw_first_row_data.slice(0, headings.length)]
+
         show_elements_to(".first_row-completed-section .column", headings.length);
         insert_text(".first_row-completed-section .subtitle", headings);
         insert_text(".first_row-completed-section code", raw_first_row_data);
@@ -537,12 +625,22 @@ $(window).on('load', function () {
     });
     
     $(".second_url-next-button").click(function () {
+        const second_url = get_values(".second_url-input-section input")[0];
+        let payload2 = Object.assign({}, payload)
+        payload2["PageQueries"] = [payload["PageQueries"][0]]
+        payload2["URLs"] = [second_url]
+        // payload["URLs"].push(second_url)
+        // payload["PageQueries"].push({"URL": second_url})
+        
         $(".second_url-input-section input").attr("name", "secondary_url");
         $(".second_url-next-button").addClass("is-loading");
-        submitFormTo(".main_form", handle_second_url_next_success, alert);
+        submitPayloadTo(payload2, "/v1/scrape", handle_second_url_next_success, console.log);
     });
     
-    $(".second_page-preview-back-button").click(function () {
+    $(".second_page-preview-back-button").click(function () {    	
+        // payload["URLs"].pop()
+        // payload["PageQueries"].pop()
+        
         $(".second_url-input-section input").attr("name", "disabled[]");
         $(".second_page-preview-section").fadeOut("fast", function() {
             $(".second_url-completed-section").fadeOut(200, function () {
@@ -554,7 +652,12 @@ $(window).on('load', function () {
     
     $(".second_page-looks_good-button").click(function () {
         $(".second_page-preview-section").fadeOut(200, function () {
-        	submitURLCanGenerate(get_current_url_list(), handle_urls_can_generate, alert);
+	    	let add10_payload = {
+	    		"URLs": get_current_url_list()
+	    	}
+	        submitPayloadTo(add10_payload, "/v1/urls/can_fill", handle_urls_can_generate, console.log);
+	        
+        	// submitURLCanGenerate(get_current_url_list(), handle_urls_can_generate, alert);
             $(".url_list-input-section").fadeIn(200);
             $(".url_list-input-section textarea")[0].focus()
         });
@@ -578,8 +681,13 @@ $(window).on('load', function () {
     
     
     $(".second_page_first_row-next-button").click(function () {
+        const second_url = get_values(".second_url-input-section input")[0];
+        payload["URLs"].push(second_url)
+        payload["PageQueries"].push({"URL": second_url})
         insert_attrs_to(".second_page_first_row-input-section textarea", "second_page_queries[]", headings.length);
         const raw_first_row_data = get_values(".second_page_first_row-input-section textarea");
+        payload["PageQueries"][1]["QueryRows"] =  [raw_first_row_data.slice(0, headings.length)]
+
         $(".second_page_first_row-input-section").fadeOut(200, function () {
             show_elements_to(".second_page_first_row-completed-section .column", headings.length);
             insert_text(".second_page_first_row-completed-section .subtitle", headings);
@@ -590,7 +698,9 @@ $(window).on('load', function () {
         })
     });
     
-    $(".third_url-back-button").click(function () {
+    $(".third_url-back-button").click(function () {    	
+        payload["URLs"].pop()
+        payload["PageQueries"].pop()
         $(".third_url-input-section input").attr("name", "disabled[]");
         $(".third_url-input-section").fadeOut(200, function () {
             $(".second_page_first_row-completed-section").fadeOut(200, function () {
@@ -601,12 +711,22 @@ $(window).on('load', function () {
     });
     
     $(".third_url-next-button").click(function () {
+        const third_url = get_values(".third_url-input-section input")[0];
+        let payload2 = Object.assign({}, payload)
+        payload2["PageQueries"] = [payload["PageQueries"][0], payload["PageQueries"][1]]
+        payload["URLs"].push(third_url)
+        payload2["URLs"] = [third_url]
+        
         $(".third_url-input-section input").attr("name", "third_url");
         $(".third_url-next-button").addClass("is-loading");
-        submitFormTo(".main_form", handle_third_url_next_success, alert);
+        submitPayloadTo(payload2, "/v1/scrape", handle_third_url_next_success, console.log);
+        // submitFormTo(".main_form", handle_third_url_next_success, alert);
     });
     
     $(".third_page-preview-back-button").click(function () {
+        payload["URLs"].pop()
+        // payload["PageQueries"].pop()
+        
         $(".third_url-input-section input").attr("name", "disabled[]");
         $(".third_page-preview-section").fadeOut("fast", function() {
             $(".third_url-completed-section").fadeOut(200, function () {
@@ -628,23 +748,50 @@ $(window).on('load', function () {
     });
 
     
+    // $(".url_list-add1-button").click(function () {
+        // submitURLGenerate(get_current_url_list(), 1, handle_urls_generated, alert);
+    // });
+    // 
+    // $(".url_list-add10-button").click(function () {
+        // submitURLGenerate(get_current_url_list(), 10, handle_urls_generated, alert);
+    // });
+    // 
+    // $(".url_list-input-section textarea").on('input propertychange paste', function() {
+        // //my Textarea content has changed
+        // submitURLCanGenerate(get_current_url_list(), handle_urls_can_generate, alert);
+    // });
     $(".url_list-add1-button").click(function () {
-        submitURLGenerate(get_current_url_list(), 1, handle_urls_generated, alert);
+    	let add1_payload = {
+    		"Number": 1,
+    		"URLs": get_current_url_list()
+    	}
+        submitPayloadTo(add1_payload, "/v1/urls/fill", handle_urls_generated, console.log);
     });
-    
     $(".url_list-add10-button").click(function () {
-        submitURLGenerate(get_current_url_list(), 10, handle_urls_generated, alert);
+    	let add10_payload = {
+    		"Number": 10,
+    		"URLs": get_current_url_list()
+    	}
+        submitPayloadTo(add10_payload, "/v1/urls/fill", handle_urls_generated, console.log);
     });
-    
     $(".url_list-input-section textarea").on('input propertychange paste', function() {
         //my Textarea content has changed
-        submitURLCanGenerate(get_current_url_list(), handle_urls_can_generate, alert);
+    	let add10_payload = {
+    		"URLs": get_current_url_list()
+    	}
+        submitPayloadTo(add10_payload, "/v1/urls/can_fill", handle_urls_can_generate, console.log);
+        // submitURLCanGenerate(get_current_url_list(), handle_urls_can_generate, alert);
     });
     
     $(".url_list-next-button").click(function () {
+    	let url_list = $(".url_list-input-section textarea").val().trim().split(/\r|\n/);
+    	let payload2 = Object.assign({}, payload);
+    	payload2["URLs"] = payload["URLs"].concat(url_list);
+    	
         $(".url_list-input-section textarea").attr("name", "url_list");
         $(".url_list-next-button").addClass("is-loading");
-        submitFormTo2(".main_form", handle_everything_looks_good, alert);
+        // submitFormTo2(".main_form", handle_everything_looks_good, alert);
+        submitPayloadTo(payload2, "/v1/scrape", handle_everything_looks_good, console.log, true);
     });
     
     $(".first_row-input-section textarea").textcomplete(first_url_autocomplete_data);

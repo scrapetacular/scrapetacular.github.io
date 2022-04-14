@@ -1,3 +1,4 @@
+// const api_domain = "https://scrapetacular.herokuapp.com"
 const api_domain = "https://scrapetacular.herokuapp.com"
 
 var headings = [];
@@ -78,9 +79,9 @@ function submitFormTo(query, on_success, on_error) {
         mode: 'cors',
         cache: 'default'
     };
-    fetch(api_domain + '/', myInit)
+    fetch(api_domain + '/v1/scrape', myInit)
         .then(response => response.json())
-        .then(data => on_success(data))
+        .then(data => on_success(data["scrape"]))
         .catch((error) => {
             console.log("error");
             console.log(error);
@@ -95,6 +96,7 @@ function submitFormTo2(query, on_success, on_error) {
     console.log(body);
     $('div.from').text(JSON.stringify(body));
 
+    // const api_domain1 = "https://scrapetacular.herokuapp.com"
     const api_domain1 = "https://scrapetacular.herokuapp.com"
 
     const myInit = {
@@ -108,13 +110,56 @@ function submitFormTo2(query, on_success, on_error) {
         mode: 'cors',
         cache: 'default'
     };
-    fetch(api_domain1 + '/', myInit)
+    fetch(api_domain1 + '/v1/scrape', myInit)
         .then(response => response.blob())
-        .then(data => on_success(data))
+        .then(data => on_success(data["scrape"]))
         .catch((error) => {
             console.log("error");
             console.log(error);
             alert("Probably no pattern found or server error, go back and try again")
+            on_error(error);
+        });
+}
+
+
+function submitPayloadTo(payload, endpoint, on_success, on_error, download = false) {
+
+    // const api_domain1 = "https://scrapetacular.herokuapp.com"
+    const api_domain1 = "https://scrapetacular.herokuapp.com"
+    if (download) {
+    	payload["Format"] = "csv"
+    }
+
+    const myInit = {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload),
+        credentials: 'omit',
+        mode: 'cors',
+        cache: 'default'
+    };
+    fetch(api_domain1 +  endpoint, myInit)
+    	.then(response => {
+    		if (!response.ok) {
+    			response.text().then(error_msg => {
+    				alert(error_msg);
+    				return
+    			});
+    			throw new Error("HTTP status :" + response.status);
+    			return
+    		}
+    		if (download) {
+    			return response.blob()
+    		}
+    		return response.json()
+    	})
+        .then(response => on_success(response))
+        .catch((error) => {
+            console.log("error");
+            console.log(error);
             on_error(error);
         });
 }
@@ -137,7 +182,7 @@ function submitPrefetchURL(url, on_success, on_error) {
         mode: 'cors',
         cache: 'default'
     };
-    fetch(api_domain + '/prefetch_url', myInit)
+    fetch(api_domain + '/v1/prefetch', myInit)
         .then(response => response.json())
         .then(data => on_success(data))
         .catch((error) => {
@@ -170,6 +215,21 @@ function build_table_structure(table_headings, table_rows) {
         table_structure.push(entry);
     }
     return table_structure;
+}
+
+function build_table_structure2(preview_data) {
+	var table_structure = [];
+	console.log(preview_data)
+	for (let i in preview_data) {
+		let col = preview_data[i]
+		for(const [index,value] of col["data"].entries()){
+		    if (!table_structure[index]) {
+		    	table_structure[index] = {}
+		    }
+		    table_structure[index][col["heading"]] = value
+		}
+	}
+	return table_structure
 }
 
 function build_and_append_table(query, data) {
@@ -218,8 +278,8 @@ function submitAutocomplete(term, callback) {
     console.log(term);
     const raw_url = get_values(".url-input-section input")[0];
     const body = {
-        url: raw_url,
-        term: term,
+        URL: raw_url,
+        Term: term,
     }
     const myInit = {
         method: 'POST',
@@ -232,9 +292,9 @@ function submitAutocomplete(term, callback) {
         mode: 'cors',
         cache: 'default'
     };
-    fetch(api_domain + '/autocomplete', myInit)
+    fetch(api_domain + '/v1/autocomplete', myInit)
         .then(response => response.json())
-        .then(data => callback(data))
+        .then(data => callback(data["autocomplete"]))
         .catch((error) => {
             callback([]);
         });
@@ -269,7 +329,15 @@ function last_from(choices, path) {
 
 
 
-function handle_first_row_next_success(predicted_second_row) {
+var double_row = []
+function handle_first_row_next_success(preview_data) {
+	// headings.map(elem => preview_data["scrape"][elem][1])
+	// const predicted_second_row = preview_data["scrape"]
+	console.log(preview_data)
+	const predicted_second_row = preview_data["scrape"].map(elem => elem["data"][1])
+	console.log(predicted_second_row)
+    double_row = predicted_second_row
+	
     if (predicted_second_row) {
         const raw_first_row_data = get_values(".first_row-input-section textarea").slice(0, headings.length);
         add_value_to_input(".second_row-input-section textarea", predicted_second_row, headings.length);
@@ -309,7 +377,8 @@ function handle_first_row_next_success(predicted_second_row) {
 }
 
 
-function handle_second_row_next_success(preview_data) {
+function handle_second_row_next_success(response) {
+	const preview_data = response["scrape"]
     const raw_second_row_data = get_values(".second_row-input-section textarea");
     $(".second_row-input-section").fadeOut("fast", function() {
         show_elements_to(".second_row-completed-section .column", headings.length);
@@ -318,7 +387,7 @@ function handle_second_row_next_success(preview_data) {
         $(".second_row-completed-section").fadeIn(200, function () {
             $(".second_row-preview-section .data_preview-table-container table").remove();
             $(".third_row-input-section .data_preview-table-container table").remove();
-            var table_structure = build_table_structure(headings, preview_data);
+            var table_structure = build_table_structure2(preview_data);
             build_and_append_table(".second_row-preview-section .data_preview-table-container", table_structure);
             build_and_append_table(".third_row-input-section .data_preview-table-container", table_structure);
             breadcrumb_path.push(".second_row-input-section");
@@ -329,7 +398,8 @@ function handle_second_row_next_success(preview_data) {
 }
 
 
-function handle_third_row_next_success(preview_data) {
+function handle_third_row_next_success(response) {
+	const preview_data = response["scrape"]
     console.log(preview_data);
     const raw_third_row_data = get_values(".third_row-input-section textarea");
     $(".third_row-input-section").fadeOut("fast", function() {
@@ -339,7 +409,7 @@ function handle_third_row_next_success(preview_data) {
         $(".third_row-completed-section").fadeIn(200, function () {
             breadcrumb_path.push(".third_row-input-section");
             $(".third_row-preview-section .data_preview-table-container table").remove();
-            var table_structure = build_table_structure(headings, preview_data);
+            var table_structure = build_table_structure2(preview_data);
             build_and_append_table(".third_row-preview-section .data_preview-table-container", table_structure);
             $(".third_row-next-button").removeClass("is-loading");
             $(".third_row-preview-section").fadeIn(200);
@@ -348,11 +418,12 @@ function handle_third_row_next_success(preview_data) {
 }
 
 
-function handle_double_row_looks_good(preview_data) {
+function handle_double_row_looks_good(response) {
+	const preview_data = response["scrape"]
     $(".double_row-preview-section").fadeOut(200, function () {
         $(".second_row-preview-section .data_preview-table-container table").remove();
         $(".third_row-input-section .data_preview-table-container table").remove();
-        var table_structure = build_table_structure(headings, preview_data);
+        var table_structure = build_table_structure2(preview_data);
         build_and_append_table(".second_row-preview-section .data_preview-table-container", table_structure);
         build_and_append_table(".third_row-input-section .data_preview-table-container", table_structure);
         breadcrumb_path.push(".double_row-preview-section");
@@ -362,7 +433,9 @@ function handle_double_row_looks_good(preview_data) {
 }
 
 
-function handle_second_page_looks_good(blob) {
+function handle_second_page_looks_good(response) {
+	// console.log(response)
+	const blob = response
     let link = document.createElement('a');
     link.download = 'jello.csv';
 
@@ -396,7 +469,13 @@ $(window).on('load', function () {
         cache: 'default'
     };
 
-   	fetch(api_domain + "/alive", cors_get_request)
+    let payload = {
+    	"Format": "json",
+    	"PageQueries": [],
+    	"URLs": []
+    };
+
+   	fetch(api_domain + "/v1/alive", cors_get_request)
    	.then((response) => {
    		console.log("API working: " + api_domain);
    		return response;
@@ -416,6 +495,14 @@ $(window).on('load', function () {
     $(".url-next-button").click(function () {
         const raw_url = get_values(".url-input-section input");
         console.log(raw_url);
+        const prefetch_payload = {
+        	"URL": raw_url[0]
+        }
+        payload["URLs"] = []
+        payload["URLs"].push(raw_url[0])
+        payload["PageQueries"] = []
+        payload["PageQueries"].push({"URL": raw_url[0]})
+        
         $(".big_title_header .subtitle").slideUp(200);
         $(".big_title_header .title").slideUp(200);
         $(".url-input-section").fadeOut("fast", function() {
@@ -423,7 +510,8 @@ $(window).on('load', function () {
             $(".url-completed-section").fadeIn(300, function() {
                 $(".headings-input-section").fadeIn(1000);
                 $(".headings-input-section input")[0].focus()
-                submitAutocomplete("blank", console.log)
+                // submitAutocomplete("blank", console.log)
+                submitPayloadTo(prefetch_payload, "/v1/prefetch", console.log, console.log)
             });
         });
     });
@@ -440,6 +528,8 @@ $(window).on('load', function () {
     
     
     $(".headings-back-button").click(function () {
+    	payload["Headings"] = []
+    	
         $(".headings-input-section").fadeOut("fast", function() {
             $(".url-completed-section").fadeOut(200, function () {
                 insert_attrs_to(".first_row-input-section textarea", "disabled[]", 4);
@@ -453,6 +543,8 @@ $(window).on('load', function () {
     
     $(".headings-next-button").click(function () {
         set_headings();
+        payload["Headings"] = headings
+        
         if (headings.length != 0) {
             $(".headings-input-section").fadeOut("fast", function() {
                 insert_attrs_to(".headings-input-section input", "headings[]", headings.length);
@@ -472,8 +564,10 @@ $(window).on('load', function () {
     
     $(".first_row-next-button").click(function () {
         const raw_first_row_data = get_values(".first_row-input-section textarea");
+        payload["PageQueries"][0]["QueryRows"] =  [raw_first_row_data.slice(0, headings.length)]
+        
         $(".first_row-next-button").addClass("is-loading");
-        submitFormTo(".main_form", handle_first_row_next_success, alert);
+        submitPayloadTo(payload, "/v1/scrape", handle_first_row_next_success, console.log);
     });
 
     
@@ -493,8 +587,10 @@ $(window).on('load', function () {
     	$(".empty_url_list").attr("name", "url_list");
     	
         $(".first_row-looks_good-button").addClass("is-loading");
-        submitFormTo2(".main_form", handle_second_page_looks_good, alert);
+        // submitFormTo2(".main_form", handle_second_page_looks_good, alert);
         // alert(JSON.stringify($(".main_form").serializeJSON()));
+        submitPayloadTo(payload, "/v1/scrape", handle_second_page_looks_good, console.log, true);
+
     });
     
     $(".first_row-missing_data-button").click(function () {
@@ -507,6 +603,8 @@ $(window).on('load', function () {
     });
     
     $(".first_row-preview-back-button").click(function () {	
+    	payload["PageQueries"][0]["QueryRows"].pop()
+    	
         $(".empty_url_list").attr("name", "disabled[]");
         $(".first_row-preview-section").fadeOut("fast", function() {
             $(".first_row-completed-section").fadeOut(200, function () {
@@ -530,6 +628,8 @@ $(window).on('load', function () {
     });
     
     $(".double_row-preview-back-button").click(function () {
+    	// payload["PageQueries"][0]["QueryRows"].pop()
+    		
         $(".double_row-preview-section").fadeOut("fast", function() {
             $(".first_row-completed-section").fadeOut(200, function () {
                 insert_attrs_to(".second_row-input-section textarea", "disabled[]", headings.length);
@@ -542,18 +642,28 @@ $(window).on('load', function () {
     });
     
     $(".double_row-looks_good-button").click(function () {
+        payload["PageQueries"][0]["QueryRows"].push(double_row.slice(0, headings.length))
+        
+        // const first_row_input_section = get_values(".first_row-input-section textarea");
+        // payload["PageQueries"][0]["QueryRows"].push(first_row_input_section)
+        // 
         $(".double_row-looks_good-button").addClass("is-loading");
-        submitFormTo(".main_form", handle_double_row_looks_good, alert);
+        submitPayloadTo(payload, "/v1/scrape", handle_double_row_looks_good, console.log);
     });
 
     
     $(".second_row-next-button").click(function () {
+        const second_row_input_section = get_values(".second_row-input-section textarea");
+        payload["PageQueries"][0]["QueryRows"].push(second_row_input_section.slice(0, headings.length))
+        
         insert_attrs_to(".second_row-input-section textarea", "second_queries[]", headings.length);
         $(".second_row-next-button").addClass("is-loading");
-        submitFormTo(".main_form", handle_second_row_next_success, alert);
+        
+        submitPayloadTo(payload, "/v1/scrape", handle_second_row_next_success, console.log);
     });
     
     $(".second_row-back-button").click(function () {
+    	
         $(".second_row-input-section textarea").attr("name", "disabled[]");
         $(".second_row-next-button").removeClass("is-loading");
         $(".second_row-input-section").fadeOut("fast", function() {
@@ -567,6 +677,9 @@ $(window).on('load', function () {
     });
     
     $(".second_row-preview-back-button").click(function () {
+    	payload["PageQueries"][0]["QueryRows"].pop()
+    	payload["Format"] = "json"
+    	
         console.log(breadcrumb_path);
         $(".empty_url_list").attr("name", "disabled[]");
         $(".second_row-preview-section").fadeOut("fast", function() {
@@ -586,6 +699,7 @@ $(window).on('load', function () {
     });
     
     $(".second_row-missing_data-button").click(function () {
+    	payload["Format"] = "json"
         $(".second_row-preview-section").fadeOut(200, function () {
             show_elements_to(".third_row-input-section .column", headings.length);
             insert_text(".third_row-input-section .columns .label", headings);
@@ -595,15 +709,20 @@ $(window).on('load', function () {
     });
     
     $(".second_row-looks_good-button").click(function () {
+        const second_row_input_section = get_values(".second_row-input-section textarea");
+        payload["PageQueries"][0]["QueryRows"].push(second_row_input_section.slice(0, headings.length))
+        
     	// FIXME download CS here?
         $(".second_row-looks_good-button").addClass("is-loading");
-    	$(".empty_url_list").attr("name", "url_list");
-        submitFormTo2(".main_form", handle_second_page_looks_good, alert);
+    	$(".empty_url_list").attr("name", "url_list")
+    	
+        submitPayloadTo(payload, "/v1/scrape", handle_second_page_looks_good, console.log, true);
         // alert(JSON.stringify($(".main_form").serializeJSON()));
     });
 
     
     $(".third_row-back-button").click(function () {
+    	
         $(".third_row-input-section textarea").attr("name", "disabled[]");
         $(".third_row-next-button").removeClass("is-loading");
         $(".third_row-input-section").fadeOut("fast", function() {
@@ -614,16 +733,23 @@ $(window).on('load', function () {
     });
     
     $(".third_row-next-button").click(function () {
+        const third_row_input_section = get_values(".third_row-input-section textarea");
+        payload["PageQueries"][0]["QueryRows"].push(third_row_input_section.slice(0, headings.length))
+        
         insert_attrs_to(".third_row-input-section textarea", "extra_queries[]", headings.length);
         $(".third_row-next-button").addClass("is-loading");
-        submitFormTo(".main_form", handle_third_row_next_success, alert);
+        
+        submitPayloadTo(payload, "/v1/scrape", handle_third_row_next_success, console.log);
     });
     
     $(".third_row-looks_good-button").click(function () {
+        const third_row_input_section = get_values(".third_row-input-section textarea");
+        payload["PageQueries"][0]["QueryRows"].push(third_row_input_section)
     	// FIXME download CS here?
         $(".third_row-looks_good-button").addClass("is-loading");
     	$(".empty_url_list").attr("name", "url_list");
-        submitFormTo2(".main_form", handle_second_page_looks_good, alert);
+    	
+        submitPayloadTo(payload, "/v1/scrape", handle_second_page_looks_good, console.log, true);
         // alert(JSON.stringify($(".main_form").serializeJSON()));
     });
     
@@ -632,6 +758,9 @@ $(window).on('load', function () {
     });
     
     $(".third_row-preview-back-button").click(function () {
+    	payload["Format"] = "json"
+    	payload["PageQueries"][0]["QueryRows"].pop()
+    	
         $(".third_row-input-section textarea").attr("name", "disabled[]");
         $(".empty_url_list").attr("name", "disabled[]");
         $(".third_row-preview-section").fadeOut("fast", function() {
@@ -645,8 +774,12 @@ $(window).on('load', function () {
 
     
     $(".url_list-next-button").click(function () {
+        const url_list_input_section = get_values(".url_list-input-section textarea");
+        payload["PageQueries"][0]["QueryRows"].push(url_list_input_section.slice(0, headings.length))
+        
         $(".url_list-input-section textarea").attr("name", "url_list");
         $(".url_list-next-button").addClass("is-loading");
-        submitFormTo2(".main_form", handle_second_page_looks_good, alert);
+    	
+        submitPayloadTo(payload, "/v1/scrape", handle_second_page_looks_good, console.log, true);
     });
 });
