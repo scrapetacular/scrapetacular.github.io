@@ -1,7 +1,7 @@
 function submitPayloadTo(payload, endpoint, on_success, on_error, download = false) {
 
     // const api_domain1 = "https://scrapetacular.herokuapp.com"
-    const api_domain1 = "https://scrapetacular.herokuapp.com"
+    const api_domain1 = ""
     if (download) {
     	payload["Format"] = "csv"
     }
@@ -87,7 +87,7 @@ $(window).on('load', function () {
         cache: 'default'
     };
 
-    const api_domain = "https://scrapetacular.herokuapp.com"
+    const api_domain = ""
 
     
     
