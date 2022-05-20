@@ -709,8 +709,8 @@ $(window).on('load', function () {
     });
     
     $(".second_row-looks_good-button").click(function () {
-        const second_row_input_section = get_values(".second_row-input-section textarea");
-        payload["PageQueries"][0]["QueryRows"].push(second_row_input_section.slice(0, headings.length))
+        // const second_row_input_section = get_values(".second_row-input-section textarea");
+        // payload["PageQueries"][0]["QueryRows"].push(second_row_input_section.slice(0, headings.length))
         
     	// FIXME download CS here?
         $(".second_row-looks_good-button").addClass("is-loading");
@@ -743,9 +743,9 @@ $(window).on('load', function () {
     });
     
     $(".third_row-looks_good-button").click(function () {
-        const third_row_input_section = get_values(".third_row-input-section textarea");
-        payload["PageQueries"][0]["QueryRows"].push(third_row_input_section)
-    	// FIXME download CS here?
+        // const third_row_input_section = get_values(".third_row-input-section textarea");
+        // payload["PageQueries"][0]["QueryRows"].push(third_row_input_section)
+    	// // FIXME download CS here?
         $(".third_row-looks_good-button").addClass("is-loading");
     	$(".empty_url_list").attr("name", "url_list");
     	
