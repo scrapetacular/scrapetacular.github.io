@@ -1,10 +1,10 @@
-const api_domain = ""
+const api_domain = "https://scrapetacular.herokuapp.com"
 
 
 
 function submitPayloadTo(payload, endpoint, on_success, on_error, download = false) {
 
-    const api_domain1 = ""
+    const api_domain1 = "https://scrapetacular.herokuapp.com"
     if (download) {
     	payload["Format"] = "csv"
     }
