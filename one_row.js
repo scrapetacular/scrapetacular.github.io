@@ -637,7 +637,7 @@ $(window).on('load', function () {
     });
     
     $(".second_page-preview-back-button").click(function () {    	
-        // payload["URLs"].pop()
+        payload["URLs"].pop()
         // payload["PageQueries"].pop()
         
         $(".second_url-input-section input").attr("name", "disabled[]");
@@ -651,6 +651,10 @@ $(window).on('load', function () {
     
     $(".second_page-looks_good-button").click(function () {
         $(".second_page-preview-section").fadeOut(200, function () {
+            const second_url = get_values(".second_url-input-section input")[0];
+
+        	payload["URLs"].push(second_url)
+        	
 	    	let add10_payload = {
 	    		"URLs": get_current_url_list()
 	    	}
